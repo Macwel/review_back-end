@@ -13,6 +13,7 @@ export default class PostRouter {
 
   private initRoutes() {
     this.router.post('/post/create', validateToken, this.#PostController.create);
-    this.router.get('/post/delete', validateToken, this.#PostController.delete);
+    this.router.post('/post/delete', validateToken, this.#PostController.delete);
+    this.router.put('/post/update', validateToken, this.#PostController.update);
   }
 }
