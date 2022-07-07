@@ -13,6 +13,13 @@ interface ICreatePost {
   text: string;
 }
 
+interface IUpdatePost {
+  user: User;
+  title?: string;
+  text?: string;
+  id: number;
+}
+
 export default class PostService {
   create = async (opt: ICreatePost): Promise<{ id: number }> => {
     try {
@@ -20,6 +27,8 @@ export default class PostService {
         { name: 'title', type: 'string' },
         { name: 'text', type: 'string' },
       ]);
+      if (data.title.length < 5 || data.title.length > 32) throw { status: 400, message: 'Invalid length of title' };
+      if (data.text.length < 5 || data.text.length > 512) throw { status: 400, message: 'Invalid length of text' };
 
       if (!Object.keys(data).length) throw { status: 400, message: 'Not enough fields' };
       data.userId = opt.user.id;
@@ -40,6 +49,35 @@ export default class PostService {
       if (post.userId !== id) throw { status: 403, message: 'Only owner can delete a post' };
 
       await Post.destroy({ where: { id: opt.id } });
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  update = async (opt: IUpdatePost): Promise<void> => {
+    try {
+      if (!opt.id) throw { status: 400, message: 'Not enough fields' };
+
+      const post = await Post.findOne({ where: { id: opt.id } });
+      if (!post) throw { status: 404, message: 'Post not found' };
+      if (post.userId !== opt.user.id) throw { status: 403, message: 'Only owner can delete a post' };
+
+      const keys: Array<string> = ['title', 'text'];
+      const data = {};
+      let block = true;
+      // eslint-disable-next-line no-restricted-syntax
+      for (const key in keys) {
+        if (opt[keys[key]]) {
+          if (opt[keys[key]].length < 5 && opt[keys[key]].length < 32)
+            throw { status: 401, message: `Invalid length of ${keys[key]}` };
+
+          data[keys[key]] = opt[keys[key]];
+          block = false;
+        }
+      }
+
+      await Post.update(data, { where: { id: opt.id } });
+      if (block) throw { status: 400, message: 'Missing fields' };
     } catch (error) {
       throw error;
     }
