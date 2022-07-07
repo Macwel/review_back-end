@@ -1,3 +1,4 @@
+import { Op } from 'sequelize';
 import Post from '../../repo/models/Post';
 import User from '../../repo/models/User';
 import { checkBody } from '../../utils';
@@ -44,7 +45,7 @@ export default class PostService {
       const { id } = opt.user;
       if (!opt.id) throw { status: 400, message: 'Not enough fields' };
 
-      const post = await Post.findOne({ where: { id: opt.id } });
+      const post = await Post.findByPk(opt.id);
       if (!post) throw { status: 404, message: 'Post not found' };
       if (post.userId !== id) throw { status: 403, message: 'Only owner can delete a post' };
 
@@ -58,7 +59,7 @@ export default class PostService {
     try {
       if (!opt.id) throw { status: 400, message: 'Not enough fields' };
 
-      const post = await Post.findOne({ where: { id: opt.id } });
+      const post = await Post.findByPk(opt.id);
       if (!post) throw { status: 404, message: 'Post not found' };
       if (post.userId !== opt.user.id) throw { status: 403, message: 'Only owner can delete a post' };
 
@@ -78,6 +79,25 @@ export default class PostService {
 
       await Post.update(data, { where: { id: opt.id } });
       if (block) throw { status: 400, message: 'Missing fields' };
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  getPostOfUser = async (id: string, page: number): Promise<{ posts: any }> => {
+    try {
+      const limitPost = 5;
+      const skipPosts = page <= 1 ? 0 : (page - 1) * limitPost;
+      if (!id) throw { status: 400, message: 'Not enough field id provided' };
+      const user: User = await User.findOne({
+        where: {
+          shortLink: { [Op.iLike]: `%${id}%` },
+        },
+      });
+      if (!user) throw { status: 404, message: 'User not found' };
+      const posts = await Post.findAll({ where: { userId: user.id }, offset: skipPosts, limit: limitPost });
+      if (posts.length === 0) throw { status: 404, message: 'Posts not found' };
+      return { posts };
     } catch (error) {
       throw error;
     }
