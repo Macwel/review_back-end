@@ -1,7 +1,8 @@
 // eslint-disable-next-line eslint-comments/disable-enable-pair
 /* eslint-disable import/no-cycle */
-import { Table, Column, Model, PrimaryKey, AllowNull, Unique } from 'sequelize-typescript';
+import { Table, Column, Model, PrimaryKey, AllowNull, Unique, HasOne, ForeignKey } from 'sequelize-typescript';
 import { DataTypes, Optional } from 'sequelize';
+import Post from './Post';
 
 interface UserAttributes {
   id: number;
@@ -62,4 +63,7 @@ export default class User extends Model<UserAttributes, IUserCreationAttributes>
     type: DataTypes.STRING(100),
   })
   shortLink: string;
+
+  @HasOne(() => Post)
+  post_id: number;
 }
