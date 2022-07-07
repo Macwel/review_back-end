@@ -27,4 +27,16 @@ export default class PostController {
       });
     }
   };
+
+  update = async (req: Request, res: Response): Promise<void> => {
+    try {
+      await this.#PostService.update({ id: Number(req.query.id), ...req.body });
+      res.status(200).json({ message: 'Success!' });
+    } catch (error) {
+      res.status(error.status || 500).json({
+        status: false,
+        message: error.message,
+      });
+    }
+  };
 }
