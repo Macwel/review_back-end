@@ -14,4 +14,13 @@ const sequelize = new Sequelize({
   models: [`${__dirname}/models/*.ts`],
 });
 
+// Initialize models
+// sequelize
+//   .sync({ force: true })
+//   // eslint-disable-next-line promise/always-return
+//   .then(() => {
+//     console.log('Tables have been created');
+//   })
+//   .catch(err => console.log(err));
+
 export default sequelize;
