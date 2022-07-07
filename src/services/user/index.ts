@@ -1,6 +1,5 @@
 import is from 'is_js';
 import User from '../../repo/models/User';
-// User.sync({ alter: false });
 
 interface IUpdateUser {
   id: any;
