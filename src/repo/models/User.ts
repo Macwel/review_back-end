@@ -5,7 +5,7 @@ import { DataTypes, Optional } from 'sequelize';
 import Post from './Post';
 
 interface UserAttributes {
-  id: number;
+  id?: number;
   email: string;
   password: string;
   fullName: string;
