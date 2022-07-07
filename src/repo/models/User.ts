@@ -1,6 +1,6 @@
 // eslint-disable-next-line eslint-comments/disable-enable-pair
 /* eslint-disable import/no-cycle */
-import { Table, Column, Model, PrimaryKey, AllowNull, Unique, HasOne, ForeignKey } from 'sequelize-typescript';
+import { Table, Column, Model, PrimaryKey, AllowNull, Unique, HasOne } from 'sequelize-typescript';
 import { DataTypes, Optional } from 'sequelize';
 import Post from './Post';
 
