@@ -54,11 +54,11 @@ export default class AuthService {
 
       await User.create(data);
 
-      await user.reload({
-        attributes: {
-          exclude: ['password'],
-        },
-      });
+      // await user.reload({
+      //   attributes: {
+      //     exclude: ['password'],
+      //   },
+      // });
 
       return await Iron.seal(user, process.env.JWT_SECRET, Iron.defaults);
     } catch (error) {
