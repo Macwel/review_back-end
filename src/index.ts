@@ -6,7 +6,7 @@ import morgan from 'morgan';
 import App from './App';
 
 // import routes
-import { AuthRouter, UserRouter } from './router';
+import { AuthRouter, UserRouter, PostRouter } from './router';
 
 const app = new App({
   port: Number(process.env.PORT) || 3040,
@@ -18,7 +18,7 @@ const app = new App({
     cors(),
     morgan('dev'),
   ],
-  routes: [new AuthRouter(), new UserRouter()],
+  routes: [new AuthRouter(), new UserRouter(), new PostRouter()],
 });
 
 app.listen();
