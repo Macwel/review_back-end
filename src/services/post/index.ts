@@ -109,4 +109,22 @@ export default class PostService {
       throw error;
     }
   };
+
+  getPosts = async (page: number, sort: number): Promise<{ posts: any }> => {
+    try {
+      const limitPost = 5;
+      const skipPosts = page <= 1 ? 0 : (page - 1) * limitPost;
+      const selectSort = sort === 0 ? 'DESC' : 'ASC';
+
+      const posts = await Post.findAll({
+        order: [['title', selectSort]],
+        offset: skipPosts,
+        limit: limitPost,
+      });
+      if (posts.length === 0) throw { status: 404, message: 'Posts not found' };
+      return { posts };
+    } catch (error) {
+      throw error;
+    }
+  };
 }

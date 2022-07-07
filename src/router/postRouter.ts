@@ -16,5 +16,6 @@ export default class PostRouter {
     this.router.post('/post/delete', validateToken, this.#PostController.delete);
     this.router.put('/post/update', validateToken, this.#PostController.update);
     this.router.get('/post/:id', this.#PostController.getPostOfUser);
+    this.router.get('/posts', this.#PostController.getPostOfUser);
   }
 }

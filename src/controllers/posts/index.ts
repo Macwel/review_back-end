@@ -55,4 +55,16 @@ export default class PostController {
       });
     }
   };
+
+  getPosts = async (req: Request, res: Response): Promise<void> => {
+    try {
+      const response = await this.#PostService.getPosts(Number(req.query.page) || 0, Number(req.query.sort) || 0);
+      res.status(200).json({ ...response, message: 'Success!' });
+    } catch (error) {
+      res.status(error.status || 500).json({
+        status: false,
+        message: error.message,
+      });
+    }
+  };
 }
