@@ -84,10 +84,12 @@ export default class PostService {
     }
   };
 
-  getPostOfUser = async (id: string, page: number): Promise<{ posts: any }> => {
+  getPostOfUser = async (id: string, page: number, sort: number): Promise<{ posts: any }> => {
     try {
       const limitPost = 5;
       const skipPosts = page <= 1 ? 0 : (page - 1) * limitPost;
+      const selectSort = sort === 0 ? 'DESC' : 'ASC';
+
       if (!id) throw { status: 400, message: 'Not enough field id provided' };
       const user: User = await User.findOne({
         where: {
@@ -95,7 +97,12 @@ export default class PostService {
         },
       });
       if (!user) throw { status: 404, message: 'User not found' };
-      const posts = await Post.findAll({ where: { userId: user.id }, offset: skipPosts, limit: limitPost });
+      const posts = await Post.findAll({
+        where: { userId: user.id },
+        order: [['title', selectSort]],
+        offset: skipPosts,
+        limit: limitPost,
+      });
       if (posts.length === 0) throw { status: 404, message: 'Posts not found' };
       return { posts };
     } catch (error) {
