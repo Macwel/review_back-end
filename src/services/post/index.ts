@@ -70,7 +70,7 @@ export default class PostService {
       for (const key in keys) {
         if (opt[keys[key]]) {
           if (opt[keys[key]].length < 5 && opt[keys[key]].length < 32)
-            throw { status: 401, message: `Invalid length of ${keys[key]}` };
+            throw { status: 400, message: `Invalid length of ${keys[key]}` };
 
           data[keys[key]] = opt[keys[key]];
           block = false;
